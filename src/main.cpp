@@ -117,17 +117,16 @@ void setup() {
   writeDataFramDebug(d34,31609);//73 "url VV";
   writeDataFramDebug(d35,31682);//39 "AT+HTTPPARA=\"CONTENT\",\"application/json";
   writeDataFramDebug(d36,31721);//9  "AT+CREG=1";
-  writeDataFramDebug(d37,31730);//11 "AT+CFUN=1"
-  // writeDataFramDebug(d37,31730);//9  "AT+CFUN=0";
-  
-  writeDataFramDebug(d38,31741);//13  "AT+EMAILCID=1";      
-  writeDataFramDebug(d39,31754);//13  "AT+EMAILTO=30";    
-  writeDataFramDebug(d40,31767);//35 "AT+SMTPSRV=\"mail.gpsflagup.com\",587"
-  writeDataFramDebug(d41,31802);//53 "AT+SMTPAUTH=1,\"contact@gpsflagup.com\",\"MerryBe123!!!\""  
-  writeDataFramDebug(d42,31855);//43 "AT+SMTPFROM=\"contact@gpsflagup.com\",\"moaad\"" 
-  writeDataFramDebug(d43,31898);//45  "AT+SMTPRCPT=0,0,\"melaboudi@gmail.com\",\"miaad\""
-  writeDataFramDebug(d44,31943);//18  "AT+SMTPSUB=\"TTest\""
-  writeDataFramDebug(d45,31954);//11  "AT+SMTPSEND"  
+  writeDataFramDebug(d37,31730);//9  "AT+CFUN=0";
+    
+  writeDataFramDebug(d38,31739);//13  "AT+EMAILCID=1";      
+  writeDataFramDebug(d39,31752);//13  "AT+EMAILTO=30";    
+  writeDataFramDebug(d40,31765);//35 "AT+SMTPSRV=\"mail.gpsflagup.com\",587"
+  writeDataFramDebug(d41,31800);//53 "AT+SMTPAUTH=1,\"contact@gpsflagup.com\",\"MerryBe123!!!\""  
+  writeDataFramDebug(d42,31853);//43 "AT+SMTPFROM=\"contact@gpsflagup.com\",\"moaad\"" 
+  writeDataFramDebug(d43,31896);//45  "AT+SMTPRCPT=0,0,\"melaboudi@gmail.com\",\"miaad\""
+  writeDataFramDebug(d44,31941);//18  "AT+SMTPSUB=\"TTest\""
+  writeDataFramDebug(d45,31959);//11  "AT+SMTPSEND"  
   
   for(long i=32010;i<32080;i++){
   writeDataFramDebug("0",i);}
