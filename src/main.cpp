@@ -42,7 +42,16 @@ char* d33="AT+CGATT=0";                  //10
 char* d34="AT+HTTPPARA=\"URL\",\"http://velovolt.ddns.net:8080/datasnap/rest/Tdata/rep\""; //73
 char* d35="AT+HTTPPARA=\"CONTENT\",\"application/json"; //39
 char* d36="AT+CREG=1";                 //9
-char* d37="AT+CFUN=0";                 //9
+char* d37="AT+CFUN=1,1";                 //11
+// char* d37="AT+CFUN=0";                 //9
+char* d38="AT+EMAILCID=1";          //13
+char* d39="AT+EMAILTO=30";          //13
+char* d40="AT+SMTPSRV=\"mail.gpsflagup.com\",587";  //35
+char* d41="AT+SMTPAUTH=1,\"contact@gpsflagup.com\",\"MerryBe123!!!\"";        //53
+char* d42="AT+SMTPFROM=\"contact@gpsflagup.com\",\"moaad\"";	//43
+char* d43="AT+SMTPRCPT=0,0,\"melaboudi@gmail.com\",\"miaad\"";	//45
+char* d44="AT+SMTPSUB=\"TTest\"";	//18
+char* d45="AT+SMTPSEND";			//11
 
 void flushSim();
 void writeDataFram(char* dataFram);
@@ -108,7 +117,19 @@ void setup() {
   writeDataFramDebug(d34,31609);//73 "url VV";
   writeDataFramDebug(d35,31682);//39 "AT+HTTPPARA=\"CONTENT\",\"application/json";
   writeDataFramDebug(d36,31721);//9  "AT+CREG=1";
-  writeDataFramDebug(d37,31730);//9  "AT+CFUN=0";
+  writeDataFramDebug(d37,31730);//11 "AT+CFUN=1"
+  // writeDataFramDebug(d37,31730);//9  "AT+CFUN=0";
+  
+  writeDataFramDebug(d38,31741);//13  "AT+EMAILCID=1";      
+  writeDataFramDebug(d39,31754);//13  "AT+EMAILTO=30";    
+  writeDataFramDebug(d40,31767);//35 "AT+SMTPSRV=\"mail.gpsflagup.com\",587"
+  writeDataFramDebug(d41,31802);//53 "AT+SMTPAUTH=1,\"contact@gpsflagup.com\",\"MerryBe123!!!\""  
+  writeDataFramDebug(d42,31855);//43 "AT+SMTPFROM=\"contact@gpsflagup.com\",\"moaad\"" 
+  writeDataFramDebug(d43,31898);//45  "AT+SMTPRCPT=0,0,\"melaboudi@gmail.com\",\"miaad\""
+  writeDataFramDebug(d44,31943);//18  "AT+SMTPSUB=\"TTest\""
+  writeDataFramDebug(d45,31954);//11  "AT+SMTPSEND"  
+  
+  
   
  
 
@@ -156,8 +177,7 @@ String returnImei() {
   ss.println("AT+GSN");
   String tempGSM = ss.readString();
   String imei1 = strstr(tempGSM.c_str(), "8");
-  String imei2 = imei1.substring(0, 15);
-  return imei2;
+  return imei1.substring(0, 15);
 }
 void flushSim(){
   uint16_t timeoutloop = 0;
