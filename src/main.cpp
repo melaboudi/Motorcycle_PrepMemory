@@ -129,10 +129,6 @@ void setup() {
   writeDataFramDebug(d44,31943);//18  "AT+SMTPSUB=\"TTest\""
   writeDataFramDebug(d45,31954);//11  "AT+SMTPSEND"  
   
-  
-  
- 
-
   for(long i=32010;i<32080;i++){
   writeDataFramDebug("0",i);}
   for(long i=32000;i<32003;i++){
