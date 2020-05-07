@@ -1,3 +1,4 @@
+// #define MOTO
 #include <Arduino.h>
 
 #include "Adafruit_FRAM_I2C.h"
@@ -27,8 +28,8 @@ char* d18="AT+SAPBR=3,1,\"CONTYPE\",\"GPRS\"";     //29
 char* d19="AT+SAPBR=1,1";                //12
 char* d20="AT+CIICR";                  //8
 char* d21="AT+CIFSR";                  //8
-char* d22="AT+HTTPTERM";               //13
-char* d23="AT+HTTPINIT";               //13
+char* d22="AT+HTTPTERM";               //11
+char* d23="AT+HTTPINIT";               //11
 char* d24="AT+HTTPPARA=\"CID\",1"  ;         //19
 char* d25="AT+HTTPPARA=\"URL\",\"http://casa-interface.casabaia.ma/commandes.php\"";     //67
 char* d26="AT+HTTPPARA=\"CONTENT\",\"application/xml"; //38
@@ -43,15 +44,30 @@ char* d34="AT+HTTPPARA=\"URL\",\"http://velovolt.ddns.net:8080/datasnap/rest/Tda
 char* d35="AT+HTTPPARA=\"CONTENT\",\"application/json"; //39
 char* d36="AT+CREG=1";                 //9
 char* d37="AT+CFUN=1,1";                 //11
-// char* d37="AT+CFUN=0";                 //9
-char* d38="AT+EMAILCID=1";          //13
-char* d39="AT+EMAILTO=30";          //13
-char* d40="AT+SMTPSRV=\"mail.gpsflagup.com\",587";  //35
-char* d41="AT+SMTPAUTH=1,\"contact@gpsflagup.com\",\"MerryBe123!!!\"";        //53
-char* d42="AT+SMTPFROM=\"contact@gpsflagup.com\",\"moaad\"";	//43
-char* d43="AT+SMTPRCPT=0,0,\"melaboudi@gmail.com\",\"miaad\"";	//45
-char* d44="AT+SMTPSUB=\"TTest\"";	//18
-char* d45="AT+SMTPSEND";			//11
+char* d38="AT+CFUN=0";                 //9
+char* d39="+212661168013";
+
+//commented code
+  // char* d38="AT+EMAILCID=1";          //13
+  // char* d39="AT+EMAILTO=30";          //13
+  // char* d40="AT+SMTPSRV=\"mail.gpsflagup.com\",587";  //35
+  // char* d41="AT+SMTPAUTH=1,\"contact@gpsflagup.com\",\"MerryBe123!!!\"";        //53
+  // char* d42="AT+SMTPFROM=\"contact@gpsflagup.com\",\"moaad\"";	//43
+  // char* d43="AT+SMTPRCPT=0,0,\"melaboudi@gmail.com\",\"miaad\"";	//45
+  // char* d44="AT+SMTPSUB=\"TTest\"";	//18
+  // char* d45="AT+SMTPSEND";			//11
+
+  //
+
+  // char* d38="AT+EMAILCID=1";          //13
+  // char* d39="AT+EMAILTO=30";          //13
+  // char* d40="AT+SMTPSRV=\"smtp.gmail.com\",587";  //31
+  // char* d41="AT+SMTPAUTH=1,\"melaboudi@gmail.com\",\"GrandPrix101010\"";        //53
+  // char* d42="AT+SMTPFROM=\"melaboudi@gmail.com\",\"moaad\"";	//41
+  // char* d43="AT+SMTPRCPT=0,0,\"melaboudi@gmail.com\",\"miaad\"";	//45
+  // char* d44="AT+SMTPSUB=\"TTest\"";	//18
+  // char* d45="AT+SMTPSEND";			//11
+
 
 void flushSim();
 void writeDataFram(char* dataFram);
@@ -61,17 +77,32 @@ void flushSim();
 void powerKey();
 
 
+void powerUp();
+void powerDown();
 
 void setup() {
-  fram.begin();
+#ifndef MOTO
+  pinMode(A2, OUTPUT);//VIO
+  pinMode(1, OUTPUT);//SS TX
+  pinMode(A0, OUTPUT);//sim Reset
+  pinMode(A3, INPUT);//sim Power Status
+  pinMode(0, INPUT);//SS RX
+  digitalWrite(A2, HIGH);
+  digitalWrite(A0, HIGH);
+#endif
+#ifdef MOTO
   pinMode(3, OUTPUT);//VIO
   pinMode(A3, INPUT);//sim Power Status
   pinMode(0, INPUT);//SS RX
   pinMode(1, OUTPUT);//SS TX
   pinMode(6, OUTPUT);//sim Reset
-  digitalWrite(6, HIGH); 
+  digitalWrite(6, HIGH);
   digitalWrite(3, HIGH);
-  powerKey();
+#endif
+  powerDown();
+  
+  fram.begin();
+    powerKey();
   ss.begin(4800);
   delay(100);
   d29 = returnImei();
@@ -79,58 +110,73 @@ void setup() {
       fram.write8(a, 0);
   } 
   
- 
-  writeDataFramDebug(d1,31000);//12 "AT+CGNSPWR=1";
-  writeDataFramDebug(d2,31012);//8 "AT+CREG?";
-  writeDataFramDebug(d3,31020);//11 "AT+CGNSPWR?";
-  writeDataFramDebug(d4,31031);//10 "AT+CGNSINF";
-  writeDataFramDebug(d5,31041);//13 "<Track Imei=\"";    
-  writeDataFramDebug(d6,31054);//26 "\" Fc=\"WGS84\" FixPosition=\"";
-  writeDataFramDebug(d7,31080);//7 "\" Lat=\"";
-  writeDataFramDebug(d8,31087);//7 "\" Lon=\"";
-  writeDataFramDebug(d9,31094);//7 "\" Vit=\"";
-  writeDataFramDebug(d10,31101);//7 " Sat=\"";
-  writeDataFramDebug(d11,31108);//7 "\" Cap=\"";
-  writeDataFramDebug(d12,31115);//16 "\" BatteryLevel=\"";
-  writeDataFramDebug(d13,31131);//6 "\" Dh=\"";
-  writeDataFramDebug(d14,31137);//3 "\"/>";
-  writeDataFramDebug(d15,31140);//9 "AT+CFUN=1";
-  writeDataFramDebug(d16,31149);//8 "AT+CPIN?";  
+  writeDataFramDebug(d1,31000);//12   "AT+CGNSPWR=1";
+  writeDataFramDebug(d2,31012);//8    "AT+CREG?";
+  writeDataFramDebug(d3,31020);//11   "AT+CGNSPWR?";
+  writeDataFramDebug(d4,31031);//10   "AT+CGNSINF";
+  writeDataFramDebug(d5,31041);//13   "<Track Imei=\"";    
+  writeDataFramDebug(d6,31054);//26   "\" Fc=\"WGS84\" FixPosition=\"";
+  writeDataFramDebug(d7,31080);//7    "\" Lat=\"";
+  writeDataFramDebug(d8,31087);//7    "\" Lon=\"";
+  writeDataFramDebug(d9,31094);//7    "\" Vit=\"";
+  writeDataFramDebug(d10,31101);//7   " Sat=\"";
+  writeDataFramDebug(d11,31108);//7   "\" Cap=\"";
+  writeDataFramDebug(d12,31115);//16  "\" BatteryLevel=\"";
+  writeDataFramDebug(d13,31131);//6   "\" Dh=\"";
+  writeDataFramDebug(d14,31137);//3   "\"/>";
+  writeDataFramDebug(d15,31140);//9   "AT+CFUN=1";
+  writeDataFramDebug(d16,31149);//8   "AT+CPIN?";  
   writeDataFramDebug(d17,31157);//27  "AT+CSTT=\"iamgprs1.ma\",\"\",\"\"";
-  writeDataFramDebug(d18,31184);//29 "AT+SAPBR=3,1,\"CONTYPE\",\"GPRS\"";
-  writeDataFramDebug(d19,31213);//12 "AT+SAPBR=1,1";
-  writeDataFramDebug(d19,31213);//12 "AT+SAPBR=1,1";
-  writeDataFramDebug(d20,31225);//8 "AT+CIICR";
-  writeDataFramDebug(d21,31233);//8 "AT+CIFSR";
-  writeDataFramDebug(d22,31241);//13 "AT+HTTPTERM";
-  writeDataFramDebug(d23,31254);//13 "AT+HTTPINIT";
-  writeDataFramDebug(d24,31267);//19 "AT+HTTPPARA=\"CID\",1"  ;
-  writeDataFramDebug(d25,31286);//67 "AT+HTTPPARA=\"URL\",\"http://casa-interface.casabaia.ma/commandes.php\"";
-  writeDataFramDebug(d26,31353);//38 "AT+HTTPPARA=\"CONTENT\",\"application/xml";
-  writeDataFramDebug(d27,31391);//14 "AT+HTTPDATA=";
-  writeDataFramDebug(d28,31405);//69 "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Commandes idclient=\"76\" imei=\"";
+  writeDataFramDebug(d18,31184);//29  "AT+SAPBR=3,1,\"CONTYPE\",\"GPRS\"";
+  writeDataFramDebug(d19,31213);//12  "AT+SAPBR=1,1";
+  writeDataFramDebug(d19,31213);//12  "AT+SAPBR=1,1";
+  writeDataFramDebug(d20,31225);//8   "AT+CIICR";
+  writeDataFramDebug(d21,31233);//8   "AT+CIFSR";
+  writeDataFramDebug(d22,31241);//11  "AT+HTTPTERM";
+  writeDataFramDebug(d23,31254);//13  "AT+HTTPINIT";
+  writeDataFramDebug(d24,31267);//19  "AT+HTTPPARA=\"CID\",1"  ;
+  writeDataFramDebug(d25,31286);//67  "AT+HTTPPARA=\"URL\",\"http://casa-interface.casabaia.ma/commandes.php\"";
+  writeDataFramDebug(d26,31353);//38  "AT+HTTPPARA=\"CONTENT\",\"application/xml";
+  writeDataFramDebug(d27,31391);//14  "AT+HTTPDATA=";
+  writeDataFramDebug(d28,31405);//69  "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Commandes idclient=\"76\" imei=\"";
   writeDataFramDebug(d29.c_str(),31474);//15 "869170031699599";
-  writeDataFramDebug(d30,31489);//56 "\"><Commande id=\"2142\" Nom=\"ADD_TRACKING\"><Param><Tracks>"  ;
-  writeDataFramDebug(d31,31545);//40 "</Tracks></Param></Commande></Commandes>";
-  writeDataFramDebug(d32,31585);//14 "AT+HTTPACTION=" ;
-  writeDataFramDebug(d33,31599);//10 "AT+CGATT=0";
-  writeDataFramDebug(d34,31609);//73 "url VV";
-  writeDataFramDebug(d35,31682);//39 "AT+HTTPPARA=\"CONTENT\",\"application/json";
-  writeDataFramDebug(d36,31721);//9  "AT+CREG=1";
-  writeDataFramDebug(d37,31730);//9  "AT+CFUN=0";
+  writeDataFramDebug(d30,31489);//56  "\"><Commande id=\"2142\" Nom=\"ADD_TRACKING\"><Param><Tracks>"  ;
+  writeDataFramDebug(d31,31545);//40  "</Tracks></Param></Commande></Commandes>";
+  writeDataFramDebug(d32,31585);//14  "AT+HTTPACTION=" ;
+  writeDataFramDebug(d33,31599);//10  "AT+CGATT=0";
+  writeDataFramDebug(d34,31609);//73  "url VV";
+  writeDataFramDebug(d35,31682);//39  "AT+HTTPPARA=\"CONTENT\",\"application/json";
+  writeDataFramDebug(d36,31721);//9   "AT+CREG=1";
+  writeDataFramDebug(d37,31730);//11  "AT+CFUN=1,1";
+  writeDataFramDebug(d38,31741);//9   "AT+CFUN=0";
+  writeDataFramDebug(d39,31750);//13   "+212661168013";
 
-  writeDataFramDebug(d38,31739);//13  "AT+EMAILCID=1";      
-  writeDataFramDebug(d39,31752);//13  "AT+EMAILTO=30";    
-  writeDataFramDebug(d40,31767);//35  "AT+SMTPSRV=\"mail.gpsflagup.com\",587"
-  writeDataFramDebug(d41,31802);//53  "AT+SMTPAUTH=1,\"contact@gpsflagup.com\",\"MerryBe123!!!\""  
-  writeDataFramDebug(d42,31855);//43  "AT+SMTPFROM=\"contact@gpsflagup.com\",\"moaad\"" 
-  writeDataFramDebug(d43,31898);//45  "AT+SMTPRCPT=0,0,\"melaboudi@gmail.com\",\"miaad\""
-  writeDataFramDebug(d44,31943);//18  "AT+SMTPSUB=\"TTest\""
-  writeDataFramDebug(d45,31961);//11  "AT+SMTPSEND"   
+// hidden code
+    // writeDataFramDebug(d38,31739);//13  "AT+EMAILCID=1";      
+    // writeDataFramDebug(d39,31752);//13  "AT+EMAILTO=30";    
+    // writeDataFramDebug(d40,31767);//35  "AT+SMTPSRV=\"mail.gpsflagup.com\",587"
+    // writeDataFramDebug(d41,31802);//53  "AT+SMTPAUTH=1,\"contact@gpsflagup.com\",\"MerryBe123!!!\""  
+    // writeDataFramDebug(d42,31855);//43  "AT+SMTPFROM=\"contact@gpsflagup.com\",\"moaad\"" 
+    // writeDataFramDebug(d43,31898);//45  "AT+SMTPRCPT=0,0,\"melaboudi@gmail.com\",\"miaad\""
+    // writeDataFramDebug(d44,31943);//18  "AT+SMTPSUB=\"TTest\""
+    // writeDataFramDebug(d45,31961);//11  "AT+SMTPSEND"   
+
+    // writeDataFramDebug(d38,31);//13  "AT+EMAILCID=1";      
+    // writeDataFramDebug(d39,31752);//13  "AT+EMAILTO=30";    
+    // writeDataFramDebug(d40,31767);//31--  "AT+SMTPSRV=\"mail.gpsflagup.com\",587"
+    // writeDataFramDebug(d41,31798);//53--  "AT+SMTPAUTH=1,\"contact@gpsflagup.com\",\"MerryBe123!!!\""  
+    // writeDataFramDebug(d42,31851);//41--  "AT+SMTPFROM=\"contact@gpsflagup.com\",\"moaad\"" 
+    // writeDataFramDebug(d43,31892);//45  "AT+SMTPRCPT=0,0,\"melaboudi@gmail.com\",\"miaad\""
+    // writeDataFramDebug(d44,31937);//18  "AT+SMTPSUB=\"TTest\""
+    // writeDataFramDebug(d45,31955);//11  "AT+SMTPSEND"   
+
+  for(long i=32000;i<32003;i++){
+  writeDataFramDebug("0",i);}
   
   for(long i=32010;i<32080;i++){
   writeDataFramDebug("0",i);}
-  for(long i=32000;i<32003;i++){
+
+  for(long i=32080;i<32110;i++){
   writeDataFramDebug("0",i);}
   
   while(1);
@@ -166,7 +212,24 @@ void writeDataFramDebug(char* dataFram, long p1) {
   }
 }
 
-
+void powerUp() {
+  while (analogRead(A3) < 200) {
+    pinMode(5, OUTPUT);//PWR KEY
+    digitalWrite(5, LOW);
+    delay(2000);
+    pinMode(5, INPUT_PULLUP);
+    delay(100);
+  }
+}
+void powerDown() {
+  while (analogRead(A3) > 200) {
+    pinMode(5, OUTPUT);//PWR KEY
+    digitalWrite(5, LOW);
+    delay(2000);
+    pinMode(5, INPUT_PULLUP);
+    delay(100);
+  }
+}
 String returnImei() {
   flushSim();
   ss.println("AT+GSN");
