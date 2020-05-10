@@ -1,4 +1,4 @@
-// #define MOTO
+#define MOTO
 #include <Arduino.h>
 
 #include "Adafruit_FRAM_I2C.h"
@@ -176,7 +176,7 @@ void setup() {
   for(long i=32010;i<32080;i++){
   writeDataFramDebug("0",i);}
 
-  for(long i=32080;i<32110;i++){
+  for(long i=32080;i<32180;i++){
   writeDataFramDebug("0",i);}
   
   while(1);
