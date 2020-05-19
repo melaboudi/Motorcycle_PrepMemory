@@ -1,4 +1,6 @@
-#define MOTO
+// #define MOTO
+// #define CAR
+#define SWEEP
 #include <Arduino.h>
 
 #include "Adafruit_FRAM_I2C.h"
@@ -35,7 +37,7 @@ char* d25="AT+HTTPPARA=\"URL\",\"http://casa-interface.casabaia.ma/commandes.php
 char* d26="AT+HTTPPARA=\"CONTENT\",\"application/xml"; //38
 char* d27="AT+HTTPDATA=";                 //14
 char* d28="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Commandes idclient=\"76\" imei=\"";    //69
-String d29=" ";             //15
+String d29="";             //15
 char* d30="\"><Commande id=\"2142\" Nom=\"ADD_TRACKING\"><Param><Tracks>"  ;         //56
 char* d31="</Tracks></Param></Commande></Commandes>";  //40
 char* d32="AT+HTTPACTION=" ;             //14
@@ -81,7 +83,7 @@ void powerUp();
 void powerDown();
 
 void setup() {
-#ifndef MOTO
+#ifdef CAR
   pinMode(A2, OUTPUT);//VIO
   pinMode(1, OUTPUT);//SS TX
   pinMode(A0, OUTPUT);//sim Reset
@@ -99,10 +101,20 @@ void setup() {
   digitalWrite(6, HIGH);
   digitalWrite(3, HIGH);
 #endif
+#ifdef SWEEP
+  pinMode(8, OUTPUT);//VIO
+  pinMode(A3, INPUT);//sim Power Status
+  pinMode(A0, OUTPUT);//LED
+  pinMode(0, INPUT);//SS RX
+  pinMode(1, OUTPUT);//SS TX
+  pinMode(6, OUTPUT);//sim Reset
+  digitalWrite(6, HIGH);
+  digitalWrite(A0, LOW);
+  digitalWrite(8, HIGH);
+#endif
   powerDown();
-  
   fram.begin();
-    powerKey();
+  powerKey();
   ss.begin(4800);
   delay(100);
   d29 = returnImei();
@@ -179,9 +191,11 @@ void setup() {
   for(long i=32080;i<32180;i++){
   writeDataFramDebug("0",i);}
   
+  powerDown();
+  #ifdef SWEEP
+  digitalWrite(A0, HIGH);
+  #endif
   while(1);
-
- 
 }
 void loop() {
 
