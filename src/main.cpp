@@ -12,7 +12,7 @@ SoftwareSerial ss = SoftwareSerial(0, 1);
 char* d1="AT+CGNSPWR=1";                //12
 char* d2="AT+CREG?";                 //8
 char* d3="AT+CGNSPWR?";                  //11
-char* d4="AT+CGNSINF";                 //10
+char* d4="AT+CGNSINF" ;                 //10
 char* d5="<Track Imei=\"";               //13
 char* d6="\" Fc=\"WGS84\" FixPosition=\"";       //26
 char* d7="\" Lat=\"";                  //7  
@@ -151,7 +151,7 @@ void setup() {
   writeDataFramDebug(d26,31353);//38  "AT+HTTPPARA=\"CONTENT\",\"application/xml";
   writeDataFramDebug(d27,31391);//14  "AT+HTTPDATA=";
   writeDataFramDebug(d28,31405);//69  "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Commandes idclient=\"76\" imei=\"";
-  writeDataFramDebug(d29.c_str(),31474);//15 "869170031699599";
+  writeDataFramDebug(d29.c_str(),31474);//15 ;//869170031844211  919geored
   writeDataFramDebug(d30,31489);//56  "\"><Commande id=\"2142\" Nom=\"ADD_TRACKING\"><Param><Tracks>"  ;
   writeDataFramDebug(d31,31545);//40  "</Tracks></Param></Commande></Commandes>";
   writeDataFramDebug(d32,31585);//14  "AT+HTTPACTION=" ;
