@@ -1,5 +1,5 @@
 // #define MOTO
-// #define CAR
+  // #define CAR
 #define SWEEP
 #include <Arduino.h>
 
@@ -38,6 +38,22 @@ char* d26="AT+HTTPPARA=\"CONTENT\",\"application/xml"; //38
 char* d27="AT+HTTPDATA=";                 //14
 char* d28="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Commandes idclient=\"76\" imei=\"";    //69
 String d29="";             //15
+// char* d29="869170031840557";             //709
+// char* d29="869170031855860";             //948
+// char* d29="869170031691919";             //883
+// char* d29="869170031852131";             //937
+// char* d29="869170031856314";             //758
+// char* d29="869170031848824";             //1045
+// char* d29="869170031854368";             //1022
+// char* d29="869170031684294";             //967
+// char* d29="869170031849764";             //1020
+// char* d29="869170031855928";             //1033
+// char* d29="869170031848501";             //956
+// char* d29="869170031855175";             //873
+// char* d29="869170031687974";             //800
+// char* d29="869170031700306";             //175
+// char* d29="869170031853469";             //1006
+// char* d29="869170031848063";             //987
 char* d30="\"><Commande id=\"2142\" Nom=\"ADD_TRACKING\"><Param><Tracks>"  ;         //56
 char* d31="</Tracks></Param></Commande></Commandes>";  //40
 char* d32="AT+HTTPACTION=" ;             //14
@@ -48,16 +64,18 @@ char* d36="AT+CREG=1";                 //9
 char* d37="AT+CFUN=1,1";                 //11
 char* d38="AT+CFUN=0";                 //9
 char* d39="+212661168013";
+char* d40="AT+HTTPPARA=\"URL\",\"http://51.75.194.176:8080/datasnap/rest/Tdata/rep\""; //69
+char* d41="AT+HTTPPARA=\"URL\",\"http://globalsmart.ovh:8080/datasnap/rest/Tdata/rep\""; //71
 
 //commented code
   // char* d38="AT+EMAILCID=1";          //13
   // char* d39="AT+EMAILTO=30";          //13
   // char* d40="AT+SMTPSRV=\"mail.gpsflagup.com\",587";  //35
   // char* d41="AT+SMTPAUTH=1,\"contact@gpsflagup.com\",\"MerryBe123!!!\"";        //53
-  // char* d42="AT+SMTPFROM=\"contact@gpsflagup.com\",\"moaad\"";	//43
-  // char* d43="AT+SMTPRCPT=0,0,\"melaboudi@gmail.com\",\"miaad\"";	//45
-  // char* d44="AT+SMTPSUB=\"TTest\"";	//18
-  // char* d45="AT+SMTPSEND";			//11
+  // char* d42="AT+SMTPFROM=\"contact@gpsflagup.com\",\"moaad\"";  //43
+  // char* d43="AT+SMTPRCPT=0,0,\"melaboudi@gmail.com\",\"miaad\""; //45
+  // char* d44="AT+SMTPSUB=\"TTest\"";  //18
+  // char* d45="AT+SMTPSEND";     //11
 
   //
 
@@ -65,10 +83,10 @@ char* d39="+212661168013";
   // char* d39="AT+EMAILTO=30";          //13
   // char* d40="AT+SMTPSRV=\"smtp.gmail.com\",587";  //31
   // char* d41="AT+SMTPAUTH=1,\"melaboudi@gmail.com\",\"GrandPrix101010\"";        //53
-  // char* d42="AT+SMTPFROM=\"melaboudi@gmail.com\",\"moaad\"";	//41
-  // char* d43="AT+SMTPRCPT=0,0,\"melaboudi@gmail.com\",\"miaad\"";	//45
-  // char* d44="AT+SMTPSUB=\"TTest\"";	//18
-  // char* d45="AT+SMTPSEND";			//11
+  // char* d42="AT+SMTPFROM=\"melaboudi@gmail.com\",\"moaad\""; //41
+  // char* d43="AT+SMTPRCPT=0,0,\"melaboudi@gmail.com\",\"miaad\""; //45
+  // char* d44="AT+SMTPSUB=\"TTest\"";  //18
+  // char* d45="AT+SMTPSEND";     //11
 
 
 void flushSim();
@@ -150,8 +168,9 @@ void setup() {
   writeDataFramDebug(d25,31286);//67  "AT+HTTPPARA=\"URL\",\"http://casa-interface.casabaia.ma/commandes.php\"";
   writeDataFramDebug(d26,31353);//38  "AT+HTTPPARA=\"CONTENT\",\"application/xml";
   writeDataFramDebug(d27,31391);//14  "AT+HTTPDATA=";
-  writeDataFramDebug(d28,31405);//69  "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Commandes idclient=\"76\" imei=\"";
-  writeDataFramDebug(d29.c_str(),31474);//15 ;//869170031844211  919geored
+  writeDataFramDebug(d28,31405);//69  " ion=\"1.0\" encoding=\"UTF-8\"?><Commandes idclient=\"76\" imei=\"";
+  writeDataFramDebug(d29.c_str(),31474);//15 ;
+  // writeDataFramDebug(d29,31474);//15 ;//869170031844211  919geored
   writeDataFramDebug(d30,31489);//56  "\"><Commande id=\"2142\" Nom=\"ADD_TRACKING\"><Param><Tracks>"  ;
   writeDataFramDebug(d31,31545);//40  "</Tracks></Param></Commande></Commandes>";
   writeDataFramDebug(d32,31585);//14  "AT+HTTPACTION=" ;
@@ -162,6 +181,8 @@ void setup() {
   writeDataFramDebug(d37,31730);//11  "AT+CFUN=1,1";
   writeDataFramDebug(d38,31741);//9   "AT+CFUN=0";
   writeDataFramDebug(d39,31750);//13   "+212661168013";
+  writeDataFramDebug(d40,31763);//69   "AT+HTTPPARA=\"URL\",\"http://51.75.194.176...\"";
+  writeDataFramDebug(d41,31832);//71   "AT+HTTPPARA=\"URL\",\"globalsmart.ovh...\"";
 
 // hidden code
     // writeDataFramDebug(d38,31739);//13  "AT+EMAILCID=1";      
